@@ -60,11 +60,18 @@ def testGame():
 
     win.getMouse()
     win.close()
+    
+def testMap():
+    win = GraphWin("MAP TEST", 1400, 766)
+
+    m = Image(Point(600, 383), "MonkeyMeadows.png")
+    m.draw(win)
+
+    click = True
+    path = []
+    path.append(win.getMouse())
 
 
 
 if __name__ == '__main__':
-    roundNum = 1
-    enemyList = []
-    lives = 100
-    testGame()
+    testMap()
