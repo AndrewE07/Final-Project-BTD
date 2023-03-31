@@ -1,0 +1,70 @@
+from graphics import *
+import time
+
+class Enemy:
+    lis = []
+    dx = 0
+    def __init__(self,win : GraphWin):
+        self.enemy = Circle(Point(50,500),25)
+        Enemy.lis.append(self)
+
+    def drawEnemy(self,win,color):
+        self.enemy.setFill(color)
+        self.enemy.draw(win)
+
+       
+
+
+class Round:
+
+    def __init__(self,win):
+        self.roundNum = roundNum
+        self.win = win
+
+    def generateEnemy(self,numOfRed):
+        global enemyList
+        for enemy in range(numOfRed):
+            e = Enemy(self.win)
+            e.drawEnemy(self.win,"red")
+            enemyList.append(e)
+            time.sleep(.1)
+
+    def moveEnemy(self):
+        for e in range(len(enemyList)):
+            enemyList[e].enemy.move(5, 0)
+
+
+
+
+
+
+
+
+def testGame():
+    # setting up window
+    win = GraphWin("Tower Defense",1500,1000)
+    win.setBackground(color_rgb(0,200,0))
+
+
+
+
+
+    round1 = Round(win)
+    round1.generateEnemy(20)
+
+
+    while lives >0:
+        round1.moveEnemy()
+        
+
+
+    win.getMouse()
+    win.close()
+
+
+
+if __name__ == '__main__':
+    roundNum = 1
+    enemyList = []
+    lives = 100
+    testGame()
