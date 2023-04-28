@@ -3,27 +3,43 @@ from Monkeys import *
 
 class Menu:
     lives = 100
+    money = 5000
 
     def __init__(self, win: GraphWin):
         self.menu = Rectangle(Point(win.getWidth() - 200, 0), Point(win.getWidth(), win.getHeight()))
         self.win = win
-        self.lives = Text(Point(win.getWidth() - 175, 25), f"{Menu.lives}")
+        self.lives = Text(Point(50, 50), f"{Menu.lives}")
+        self.lives.setSize(30)
+        self.money = Text(Point(200,50), f"${Menu.money}")
+        self.money.setSize(30)
         self.dartMonkeTab = DartMonkeyTab()
         self.bombshooterTab = BombshooterTab()
         self.iceMonkeyTab = IceMonkeyTab()
         self.tackshooterTab = TackShooterTab()
         self.supermonkeyTab = SuperMonkeyTab()
 
+    def displayMoney(self):
+        self.money.undraw()
+        self.money = Text(Point(200,50), f"${Menu.money}")
+        self.money.setSize(30)
+        self.money.draw(self.win)
+
+
+
     def draw(self):
         self.menu.setOutline("white")
         self.menu.setFill(((((((((((((((((((((("white"))))))))))))))))))))))
         self.menu.draw(self.win)
         self.lives.draw(self.win)
+        self.money.draw(self.win)
         self.dartMonkeTab.drawDartTab(self.win)
         self.bombshooterTab.drawBombTab(self.win)
         self.iceMonkeyTab.drawIceMonkeyTab(self.win)
         self.tackshooterTab.drawTackShooterTab(self.win)
         self.supermonkeyTab.drawSuperMonkeyTab(self.win)
+
+
+
 
 
 class Tab:
@@ -32,7 +48,7 @@ class Tab:
         self.x = x
         self.y = y
         self.color = color
-        self.tab = RoundedRectangle(Point(self.x, self.y), Point(self.x + 100, self.y + 100))
+        self.tab = RoundedRectangle(Point(self.x, self.y), Point(self.x + 100, self.y + 125))
 
     def drawTab(self, win):
         self.tab.setFill(self.color)
@@ -44,10 +60,12 @@ class DartMonkeyTab(Tab):
     def __init__(self):
         super().__init__(1200, 200, "blue")
         self.dartMonkeImage = Image(Point(1250, 250), "dartmonkey.png")
+        self.price = Text(Point(1250,315), "170")
 
     def drawDartTab(self, win: GraphWin):
         self.drawTab(win)
         self.dartMonkeImage.draw(win)
+        self.price.draw(win)
 
 
 class BombshooterTab(Tab):
@@ -55,43 +73,52 @@ class BombshooterTab(Tab):
     def __init__(self):
         super().__init__(1300, 200, "blue")
         self.bombshooterImage = Image(Point(1350, 250), "bombshooter.png")
+        self.price = Text(Point(1350,315), "445")
 
     def drawBombTab(self, win: GraphWin):
         self.drawTab(win)
         self.bombshooterImage.draw(win)
+        self.price.draw(win)
 
 
 class IceMonkeyTab(Tab):
 
     def __init__(self):
-        super().__init__(1200, 300, 'blue')
-        self.iceMonkeyImage = Image(Point(1250, 350), "icemonkey.png")
+        super().__init__(1200, 325, 'blue')
+        self.iceMonkeyImage = Image(Point(1250, 375), "icemonkey.png")
+        self.price = Text(Point(1250,432), "425")
 
     def drawIceMonkeyTab(self, win: GraphWin):
         self.drawTab(win)
         self.iceMonkeyImage.draw(win)
+        self.price.draw(win)
 
 
 class TackShooterTab(Tab):
 
     def __init__(self):
-        super().__init__(1300, 300, 'blue')
-        self.tackshooterImage = Image(Point(1350, 350), "tackshooter.png")
+        super().__init__(1300, 325, 'blue')
+        self.tackshooterImage = Image(Point(1350, 375), "tackshooter.png")
+        self.price = Text(Point(1350,432), "240")
 
     def drawTackShooterTab(self, win: GraphWin):
         self.drawTab(win)
         self.tackshooterImage.draw(win)
+        self.price.draw(win)
 
 
 class SuperMonkeyTab(Tab):
 
     def __init__(self):
-        super().__init__(1200, 400, 'purple')
-        self.superMonkeyImage = Image(Point(1250, 450), "supermonkey.png")
+        super().__init__(1200, 450, 'purple')
+        self.superMonkeyImage = Image(Point(1250, 500), "supermonkey.png")
+        self.price = Text(Point(1250,565), "2,125")
 
     def drawSuperMonkeyTab(self, win):
         self.drawTab(win)
         self.superMonkeyImage.draw(win)
+        self.price.draw(win)
+
 
 
 # andy is a big dummy dumb
@@ -100,13 +127,22 @@ class SuperMonkeyTab(Tab):
 
 def testMenu():
     win = GraphWin("Test Menu", 1400, 766, autoflush=False)
-    pathhitbox = []
-
-
     m = Image(Point(600, 383), "MonkeyMeadows.png")
     m.draw(win)
     m = Menu(win)
     m.draw()
+    pathhitbox = [Rectangle(Point(0.0, 291.0), Point(628.0, 348.0)),
+        Rectangle(Point(566.0, 112.0), Point(628.0, 348.0)),
+        Rectangle(Point(363.0, 112.0), Point(628.0, 177.0)),
+        Rectangle(Point(363.0, 112.0), Point(422.0, 655.0)),
+        Rectangle(Point(151.0, 586.0), Point(422.0, 655.0)),
+        Rectangle(Point(151.0, 419.0), Point(234.0, 655.0)),
+        Rectangle(Point(151.0, 419.0), Point(793.0, 475.0)),
+        Rectangle(Point(726.0, 227.0), Point(793.0, 475.0)),
+        Rectangle(Point(726.0, 227.0), Point(934.0, 281.0)),
+         Rectangle(Point(869.0, 228.0), Point(934.0, 580.0)),
+         Rectangle(Point(509.0, 531.0) ,Point(934.0, 580.0)),
+         Rectangle(Point(509.0, 531.0) ,Point(566.0, 764.0))]
 
     dartImage = Image(Point(0, 0), "dartMonkey.png")
     soupImage = Image(Point(0, 0), "supermonkey.png")
@@ -117,7 +153,7 @@ def testMenu():
 
     while Menu.lives > 0:
         p = win.checkMouse()
-        if p is not None and 1200 < p.getX() < 1300 and 200 < p.getY() < 300:
+        if p is not None and 1200 < p.getX() < 1300 and 200 < p.getY() < 325 and Menu.money >= 170:
             click = False
             c = None
             while not click:
@@ -126,12 +162,14 @@ def testMenu():
                 dartImage.draw(win)
                 win.update()
                 c = win.checkMouse()
-                if c is not None and c.getX() < 1200:
-                    monke = (DartMonkey(c.getX(), c.getY(), color_rgb(196, 164, 132)))
+                if c is not None and c.getX() < 1100 and not hitboxCheck(pathhitbox, Rectangle(Point(c.getX() - 20, c.getY() - 5), Point(c.getX() + 5, c.getY() + 20))):
+                    monke = (DartMonkey(c.getX(), c.getY()))
                     monke.drawBody(win)
                     dartImage.undraw()
+                    Menu.money -= 170
+                    m.displayMoney()
                     click = True
-        if p is not None and 1200 < p.getX() < 1300 and 400 < p.getY() < 500:
+        if p is not None and 1200 < p.getX() < 1300 and 450 < p.getY() < 575 and Menu.money >= 2125:
             click = False
             c = None
             while not click:
@@ -140,12 +178,14 @@ def testMenu():
                 soupImage.draw(win)
                 win.update()
                 c = win.checkMouse()
-                if c is not None and c.getX() < 1200:
+                if c is not None and c.getX() < 1100 and not hitboxCheck(pathhitbox, Rectangle(Point(c.getX() - 15, c.getY() - 30),Point(c.getX() + 15, c.getY() + 30))):
                     soupmonke = (SuperMonkey(c.getX(), c.getY()))
                     soupmonke.drawBody(win)
                     soupImage.undraw()
+                    Menu.money -= 2125
+                    m.displayMoney()
                     click = True
-        if p is not None and 1200 < p.getX() < 1300 and 300 < p.getY() < 400:
+        if p is not None and 1200 < p.getX() < 1300 and 325 < p.getY() < 450 and Menu.money >= 425:
             click = False
             c = None
             while not click:
@@ -154,12 +194,14 @@ def testMenu():
                 iceImage.draw(win)
                 win.update()
                 c = win.checkMouse()
-                if c is not None and c.getX() < 1200:
+                if c is not None and c.getX() < 1100 and not hitboxCheck(pathhitbox, Rectangle(Point(c.getX() - 20,c.getY() - 20),Point(c.getX() + 20,c.getY() + 20))):
                     iceMonke = IceMonkey(c.getX(), c.getY())
                     iceMonke.drawBody(win)
                     iceImage.undraw()
+                    Menu.money -= 425
+                    m.displayMoney()
                     click = True
-        if p is not None and 1300 < p.getX() < 1400 and 200 < p.getY() < 300:
+        if p is not None and 1300 < p.getX() < 1400 and 200 < p.getY() < 325 and Menu.money >= 445:
             click = False
             c = None
             while not click:
@@ -168,12 +210,14 @@ def testMenu():
                 bombImage.draw(win)
                 win.update()
                 c = win.checkMouse()
-                if c is not None and c.getX() < 1200:
+                if c is not None and c.getX() < 1100 and not hitboxCheck(pathhitbox, Rectangle(Point(c.getX() - 15,c.getY() - 15),Point(c.getX() + 25,c.getY() + 25))):
                     bombTower = Bombshooter(c.getX(), c.getY())
                     bombTower.drawTower(win)
                     bombImage.undraw()
+                    Menu.money -= 445
+                    m.displayMoney()
                     click = True
-        if p is not None and 1300 < p.getX() < 1400 and 300 < p.getY() < 400:
+        if p is not None and 1300 < p.getX() < 1400 and 325 < p.getY() < 450 and Menu.money >= 240:
             click = False
             c = None
             while not click:
@@ -182,10 +226,12 @@ def testMenu():
                 tackImage.draw(win)
                 win.update()
                 c = win.checkMouse()
-                if c is not None and c.getX() < 1200:
+                if c is not None and c.getX() < 1100 and not hitboxCheck(pathhitbox, Rectangle(Point(c.getX() - 21,c.getY() - 20),Point(c.getX() + 19,c.getY() +  20))):
                     tackTower = TackShooter(c.getX(), c.getY())
                     tackTower.drawTower(win)
                     tackImage.undraw()
+                    Menu.money -= 240
+                    m.displayMoney()
                     click = True
     win.getMouse()
 
