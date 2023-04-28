@@ -1,0 +1,243 @@
+from graphics import *
+
+class Monkey:
+    def __init__(self, name: str, sizeOfMonkey:int):
+        self.name = name
+        self.sizeOfMonkey = sizeOfMonkey
+        self.display = None
+
+
+class Dart:
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.dartPart = []
+
+
+    def drawDart(self,win):
+        dart = Oval(Point(self.x + 35, self.y - 10),Point(self.x + 45,self.y + 20))
+        dart.setFill("black")
+        dartTip = Polygon(Point(self.x+ 38,self.y + 20),Point(self.x + 40 , self.y + 25),Point(self.x + 42, self.y + 20 ))
+        dartTip.setFill("silver")
+        dartFin1 = Circle(Point(self.x + 37,self.y - 10),5)
+        dartFin1.setFill("yellow")
+        dartFin1.setOutline("yellow")
+        dartFin2 = Circle(Point(self.x + 43,self.y - 10),5)
+        dartFin2.setFill("yellow")
+        dartFin2.setOutline("yellow")
+
+        self.dartPart.append(dartTip)
+        self.dartPart.append(dartFin1)
+        self.dartPart.append(dartFin2)
+        self.dartPart.append(dart)
+        dartTip.draw(win)
+        dartFin1.draw(win)
+        dartFin2.draw(win)
+        dart.draw(win)
+
+    def undrawDart(self):
+        for i in self.dartPart:
+            i.undraw()
+
+
+class DartMonkey(Monkey):
+    def __init__(self,x,y):
+        super().__init__("Dart Monkey",30)
+        self.x = x
+        self.y = y
+        self.color = color_rgb(196, 164, 132)
+        self.dart = Dart(x,y)
+        self.bodyParts = []
+        self.monke = []
+        self.monkeParts = []
+
+
+    def drawBody(self,win):
+        monke = Image(Point(self.x, self.y), "dartmonkey.png")
+        monke.draw(win)
+
+    def drawTail(self,win):
+        tail = Oval(Point(self.x - 5,self.y - self.sizeOfMonkey + 3),Point(self.x + 5, self.y - self.sizeOfMonkey - 20))
+        tail.setFill("brown")
+        self.bodyParts.append(tail)
+        self.monke.append(tail)
+
+        tail.draw(win)
+
+    def undrawMonke(self):
+        for i in self.bodyParts:
+            i.undraw()
+        self.dart.undrawDart()
+
+
+class SuperMonkey(Monkey):
+
+    def __init__(self,x,y):
+        super().__init__("Super Monkey",40)
+        self.x = x
+        self.y = y
+        self.color = color_rgb(196, 164, 132)
+        self.bodyParts = []
+
+
+    def drawBody(self, win):
+        monke = Image(Point(self.x , self.y ), "supermonkey.png")
+        monke.draw(win)
+
+
+    def undrawMonke(self):
+        for i in self.bodyParts:
+            i.undraw()
+
+class IceMonkey(Monkey):
+
+    def __init__(self,x,y):
+        super().__init__("Ice Monkey",30)
+        self.x = x
+        self.y = y
+        self.color = color_rgb(102, 255, 255)
+        self.bodyParts = []
+
+
+    def drawBody(self,win):
+        monke = Image(Point(self.x, self.y),"icemonkey.png")
+        monke.draw(win)
+
+
+
+
+
+
+class Bombshooter:
+
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.color = "Black"
+        self.size = 30
+
+
+    def drawTower(self,win):
+        tower = Image(Point(self.x, self.y),"bombshooter.png")
+        tower.draw(win)
+
+
+
+
+class TackShooter:
+
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.color = "pink"
+        self.size = 30
+
+
+    def drawTower(self,win):
+        tower = Image(Point(self.x, self.y), "tackshooter.png")
+        tower.draw(win)
+
+
+
+def hitboxCheck(path, tower):
+    for i in path:
+        check = Rectangle.testCollision_RectVsRect(i, tower)
+        if check:
+            return True
+    return False
+
+
+def main():
+    win = GraphWin("Monkey Test", 800, 600, autoflush=False)
+    win.setBackground("green")
+    dartMonkeMenu = Rectangle(Point(600,0),Point(800,100))
+    dartMonkeMenu.draw(win)
+    soupMonkeMenu = Rectangle(Point(600,100),Point(800,200))
+    soupMonkeMenu.draw(win)
+    iceMonkeMenu = Rectangle(Point(600,200),Point(800,300))
+    iceMonkeMenu.draw(win)
+    bombtowerMenu = Rectangle(Point(600,300),Point(800,400))
+    bombtowerMenu.draw(win)
+
+
+    monks = []
+    dartImage =  Image(Point(0,0),"dartMonkey.png")
+    soupImage = Image(Point(0,0),"supermonkey.png")
+    iceImage = Image(Point(0,0),"icemonkey.png")
+    bombImage = Image(Point(0,0),"bombshooter.png")
+    tackImage = Image(Point(0,0),"tackshooter.png")
+    while not not not not not False:
+        p = win.checkMouse()
+        if p is not None and 600 < p.getX() < 800 and 0 < p.getY() < 100:
+            click = False
+            c = None
+            while not click:
+                dartImage.undraw()
+                dartImage = Image(win.getCurrentMouseLocation(),"dartMonkey.png")
+                dartImage.draw(win)
+                win.update()
+                c = win.checkMouse()
+                if c is not None:
+                    monke = (DartMonkey(c.getX(),c.getY()))
+                    monke.drawBody(win)
+                    dartImage.undraw()
+                    click = True
+        if p is not None and 600 < p.getX() < 800 and 100 < p.getY() < 200:
+            click = False
+            c = None
+            while not click:
+                soupImage.undraw()
+                soupImage = Image(win.getCurrentMouseLocation(),"supermonkey.png")
+                soupImage.draw(win)
+                win.update()
+                c = win.checkMouse()
+                if c is not None:
+                    soupmonke = (SuperMonkey(c.getX(), c.getY()))
+                    soupmonke.drawBody(win)
+                    soupImage.undraw()
+                    click = True
+        if p is not None and 600 < p.getX() < 800 and 200 < p.getY() < 300:
+            click = False
+            c = None
+            while not click:
+                iceImage.undraw()
+                iceImage = Image(win.getCurrentMouseLocation(),"icemonkey.png")
+                iceImage.draw(win)
+                win.update()
+                c = win.checkMouse()
+                if c is not None:
+                    iceMonke = IceMonkey(c.getX(),c.getY())
+                    iceMonke.drawBody(win)
+                    iceImage.undraw()
+                    click = True
+        if p is not None and 600 < p.getX() < 800 and 300 < p.getY() < 400:
+            click = False
+            c = None
+            while not click:
+                bombImage.undraw()
+                bombImage = Image(win.getCurrentMouseLocation(),"bombshooter.png")
+                bombImage.draw(win)
+                win.update()
+                c = win.checkMouse()
+                if c is not None:
+                    bombTower = Bombshooter(c.getX(),c.getY())
+                    bombTower.drawTower(win)
+                    bombImage.undraw()
+                    click = True
+        if p is not None and 600 < p.getX() < 800 and 400 < p.getY() < 500:
+            click = False
+            c = None
+            while not click:
+                tackImage.undraw()
+                tackImage = Image(win.getCurrentMouseLocation(),"tackshooter.png")
+                tackImage.draw(win)
+                win.update()
+                c = win.checkMouse()
+                if c is not None:
+                    tackTower = TackShooter(c.getX(),c.getY())
+                    tackTower.drawTower(win)
+                    tackImage.undraw()
+                    click = True
+
+if __name__ == '__main__':
+    main()
