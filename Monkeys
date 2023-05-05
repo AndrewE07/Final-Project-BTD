@@ -48,19 +48,22 @@ class DartMonkey(Monkey):
         self.color = color_rgb(196, 164, 132)
         self.dart = Dart(x,y)
         self.bodyParts = []
-        self.monke = []
+        self.monke = Image(Point(self.x, self.y), "dartmonkey.png")
         self.monkeParts = []
+        self.hitbox = Rectangle(Point(x - 30, y - 15), Point(x + 15, y + 30))
+        self.highlightMonke = Image(Point(self.x, self.y), "highlighted dartmonkey.png")
+        self.radius = Circle(Point(x,y),220)
+        self.highlighted = False
 
 
     def drawBody(self,win):
-        monke = Image(Point(self.x, self.y), "dartmonkey.png")
-        monke.draw(win)
+        self.monke.draw(win)
 
     def drawTail(self,win):
         tail = Oval(Point(self.x - 5,self.y - self.sizeOfMonkey + 3),Point(self.x + 5, self.y - self.sizeOfMonkey - 20))
         tail.setFill("brown")
         self.bodyParts.append(tail)
-        self.monke.append(tail)
+
 
         tail.draw(win)
 
@@ -68,6 +71,19 @@ class DartMonkey(Monkey):
         for i in self.bodyParts:
             i.undraw()
         self.dart.undrawDart()
+
+    def highLight(self,win):
+        self.monke.undraw()
+        self.radius.draw(win)
+        self.highlightMonke.draw(win)
+        self.highlighted = True
+
+    def unHighLight(self,win):
+        self.highlightMonke.undraw()
+        self.radius.undraw()
+        self.monke.draw(win)
+        self.highlighted = False
+
 
 
 class SuperMonkey(Monkey):
@@ -77,17 +93,28 @@ class SuperMonkey(Monkey):
         self.x = x
         self.y = y
         self.color = color_rgb(196, 164, 132)
-        self.bodyParts = []
+        self.monke = Image(Point(self.x , self.y ), "supermonkey.png")
+        self.hitbox = Rectangle(Point(x - 30, y - 30), Point(x + 25, y + 38))
+        self.highlightMonke = Image(Point(self.x, self.y), "highlighted supermonkey.png")
+        self.radius = Circle(Point(x,y),220)
+        self.highlighted = False
 
 
     def drawBody(self, win):
-        monke = Image(Point(self.x , self.y ), "supermonkey.png")
-        monke.draw(win)
+        self.monke.draw(win)
 
 
-    def undrawMonke(self):
-        for i in self.bodyParts:
-            i.undraw()
+    def highLight(self,win):
+        self.monke.undraw()
+        self.radius.draw(win)
+        self.highlightMonke.draw(win)
+        self.highlighted = True
+
+    def unHighLight(self,win):
+        self.highlightMonke.undraw()
+        self.radius.undraw()
+        self.monke.draw(win)
+        self.highlighted = False
 
 class IceMonkey(Monkey):
 
@@ -96,12 +123,27 @@ class IceMonkey(Monkey):
         self.x = x
         self.y = y
         self.color = color_rgb(102, 255, 255)
-        self.bodyParts = []
+        self.monke = Image(Point(self.x, self.y),"icemonkey.png")
+        self.hitbox = Rectangle(Point(x - 30, y - 25), Point(x + 30, y + 27))
+        self.highlightMonke = Image(Point(self.x, self.y), "highlighted icemonkey.png")
+        self.radius = Circle(Point(x,y),220)
+        self.highlighted = False
 
 
     def drawBody(self,win):
-        monke = Image(Point(self.x, self.y),"icemonkey.png")
-        monke.draw(win)
+        self.monke.draw(win)
+
+    def highLight(self,win):
+        self.monke.undraw()
+        self.radius.draw(win)
+        self.highlightMonke.draw(win)
+        self.highlighted = True
+
+    def unHighLight(self,win):
+        self.highlightMonke.undraw()
+        self.radius.undraw()
+        self.monke.draw(win)
+        self.highlighted = False
 
 
 
@@ -115,12 +157,27 @@ class Bombshooter:
         self.y = y
         self.color = "Black"
         self.size = 30
+        self.tower = Image(Point(self.x, self.y),"bombshooter.png")
+        self.hitbox = Rectangle(Point(x - 30, y - 25), Point(x + 30, y + 30))
+        self.highlightMonke = Image(Point(self.x, self.y), "highlighted bombshooter.png")
+        self.radius = Circle(Point(x,y),220)
+        self.highlighted = False
 
 
     def drawTower(self,win):
-        tower = Image(Point(self.x, self.y),"bombshooter.png")
-        tower.draw(win)
+        self.tower.draw(win)
 
+    def highLight(self,win):
+        self.tower.undraw()
+        self.radius.draw(win)
+        self.highlightMonke.draw(win)
+        self.highlighted = True
+
+    def unHighLight(self,win):
+        self.highlightMonke.undraw()
+        self.radius.undraw()
+        self.tower.draw(win)
+        self.highlighted = False
 
 
 
@@ -131,11 +188,27 @@ class TackShooter:
         self.y = y
         self.color = "pink"
         self.size = 30
+        self.tower = Image(Point(self.x, self.y), "tackshooter.png")
+        self.hitbox = Rectangle(Point(x - 30, y - 25), Point(x + 20, y + 30))
+        self.highlightMonke = Image(Point(self.x, self.y), "highlighted tackshooter.png")
+        self.radius = Circle(Point(x,y),100)
+        self.highlighted = False
 
 
     def drawTower(self,win):
-        tower = Image(Point(self.x, self.y), "tackshooter.png")
-        tower.draw(win)
+        self.tower.draw(win)
+
+    def highLight(self,win):
+        self.tower.undraw()
+        self.radius.draw(win)
+        self.highlightMonke.draw(win)
+        self.highlighted = True
+
+    def unHighLight(self,win):
+        self.highlightMonke.undraw()
+        self.radius.undraw()
+        self.tower.draw(win)
+        self.highlighted = False
 
 
 
@@ -145,6 +218,18 @@ def hitboxCheck(path, tower):
         if check:
             return True
     return False
+def monkeycollison(monkeylist, tower):
+    for i in monkeylist:
+        check = Rectangle.testCollision_RectVsRect(i,tower)
+        if check:
+            return True
+    return False
+def checkclick(monkeyList, point: Point):
+    for i in monkeyList:
+        check = Rectangle.testCollision_RectVsPoint(i.hitbox,point)
+        if check:
+            return i
+    return None
 
 
 def main():
@@ -159,8 +244,6 @@ def main():
     bombtowerMenu = Rectangle(Point(600,300),Point(800,400))
     bombtowerMenu.draw(win)
 
-
-    monks = []
     dartImage =  Image(Point(0,0),"dartMonkey.png")
     soupImage = Image(Point(0,0),"supermonkey.png")
     iceImage = Image(Point(0,0),"icemonkey.png")
