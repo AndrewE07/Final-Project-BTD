@@ -60,14 +60,14 @@ class Bloon:
     lis = []  # Bloon container
 
     colors = {"black": "BTD6Black.png", "blue": "BTD6Blue.png", "green": "BTD6Green.png", "lead": "BTD6Lead.png", "pink": "BTD6Pink.png",
-              "rainbow": "BTD6Rainbow.png", "red": "BTD6Red.png", "white": "BTD6White.png", "yellow": "BTD6Yellow.png", "zebra": "BTD6Zebra.png"}  # color --> png
+              "rainbow": "BTD6Rainbow.png", "red": "BTD6Red.png", "white": "BTD6White.png", "yellow": "BTD6Yellow.png", "zebra": "BTD6Zebra.png", "MOAB": "BTD6MOAB.png"}  # color --> png
 
     colorHitbox = {"black": ((16, 22), (-17, -20)), "blue": ((25, 30), (-25, -30)), "green": ((25, 30), (-25, -30)),
                    "lead": ((25, 30), (-25, -30)), "pink": ((25, 30), (-25, -30)), "rainbow": ((25, 30), (-25, -30)),
                    "red": ((25, 30), (-25, -30)), "white": ((16, 22), (-17, -20)), "yellow": ((25, 30), (-25, -30)), "zebra": ((25, 30), (-25, -30))}  # Hitbox size
 
     colorSplits = {"black": ("pink", "pink"), "white": ("pink", "pink"), "lead": ("black", "black"), "rainbow": ("zebra", "zebra"),
-                   "zebra": ("white", "white", "black", "black")}  # Which bloons split into which
+                   "zebra": ("white", "white", "black", "black"), "MOAB": ("rainbow", "rainbow", "rainbow", "rainbow")}  # Which bloons split into which
 
     colorOrder = ("red", "blue", "green", "yellow", "pink", "black", "white")  # Bloons in health/level order
 
@@ -76,13 +76,13 @@ class Bloon:
 
     def __init__(self, win: GraphWin, color="red", moveIndex=0):
         self.color = color
-        self.hitboxval = Bloon.colorHitbox[color]
+        # self.hitboxval = Bloon.colorHitbox[color]
         self.img = Bloon.colors[color]
         self.bloon = Image(path[0], self.img)
         Bloon.lis.append(self)
         self.moveIndex = moveIndex
-        self.hitbox = Rectangle(Point(path[self.moveIndex].getX() + self.hitboxval[0][0], path[self.moveIndex].getY() + self.hitboxval[0][1]),
-                                Point(path[self.moveIndex].getX() + self.hitboxval[1][0], path[self.moveIndex].getY() + self.hitboxval[1][1]))
+        # self.hitbox = Rectangle(Point(path[self.moveIndex].getX() + self.hitboxval[0][0], path[self.moveIndex].getY() + self.hitboxval[0][1]),
+        #                         Point(path[self.moveIndex].getX() + self.hitboxval[1][0], path[self.moveIndex].getY() + self.hitboxval[1][1]))
 
     def drawBloon(self, win):
         """Displays the bloon's image in the window"""
@@ -130,6 +130,35 @@ class Bloon:
             print(i, end=" ")
         print()
 
+class MOAB(Bloon):
+
+    rotations = (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330)  # temp
+
+    def __str__(self):
+        return f"M.O.A.B. class bloon at {self.moveIndex}"
+
+    def __init__(self, win: GraphWin, color="MOAB", moveIndex=0, rotationAngle=0):
+        super().__init__(win, color, moveIndex)
+        self.health = 200
+        self.rotationAngle = rotationAngle
+
+    def drawBloon(self, win):
+        super().drawBloon(win)
+        # self.bloon.transform(1, self.rotationAngle)
+
+    def moveSelf(self, win):
+        super().moveSelf(win)
+        self.rotationAngle += 10
+        self.bloon.transform(angle=self.rotationAngle)
+
+        self.bloon.redraw()
+
+
+    def popSelf(self, win):
+        self.health -= 100
+        if self.health <= 0:
+            super().popSelf(win)
+
 
 def testGame():
     # setting up window
@@ -138,6 +167,7 @@ def testGame():
     gameMap = Image(Point(600, 386.5), "MonkeyMeadows.png")
     gameMap.draw(win)
     gameRunning = True
+    m = MOAB(win)
     for c in ("red", "blue", "black", "green", "lead", "pink", "rainbow", "white", "yellow", "zebra"):
         b = Bloon(win, c)
         b.drawBloon(win)
