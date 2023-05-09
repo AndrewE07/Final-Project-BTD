@@ -53,7 +53,8 @@ path = [Point(-20, 320), Point(-10.0, 320.0), Point(0, 320), Point(4.0, 322.0), 
         Point(568.0, 567.0), Point(557.0, 574.0), Point(550.0, 586.0), Point(545.0, 597.0), Point(543.0, 608.0),
         Point(540.0, 619.0), Point(537.0, 630.0), Point(532.0, 645.0), Point(530.0, 657.0), Point(527.0, 670.0),
         Point(523.0, 682.0), Point(520.0, 693.0), Point(520.0, 705.0), Point(526.0, 716.0), Point(529.0, 727.0),
-        Point(529.0, 738.0), Point(530, 748), Point(530, 758), Point(530, 768)]
+        Point(529.0, 738.0), Point(530, 748), Point(530, 758), Point(530, 768), Point(530, 778), Point(530, 788),
+        Point(530, 798), Point(530, 800)]
 
 
 class Bloon:
@@ -99,10 +100,14 @@ class Bloon:
         del self.bloon
         self.moveIndex += 1
         if self.moveIndex >= len(path) - 1:
-            Bloon.lis.remove(self)
-            return
+            if self.color != "MOAB":
+                Bloon.lis.remove(self)
+                return False
+            else:
+                return True
         self.bloon = Image(path[self.moveIndex], self.img)
         self.drawBloon(win)
+        return False
 
     def popSelf(self, win):
         """Creates the new bloons according to current bloon popping"""
@@ -130,34 +135,54 @@ class Bloon:
             print(i, end=" ")
         print()
 
+
 class MOAB(Bloon):
 
-    rotations = (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330)  # temp
+    rotation = (46, 47, 48, 49, 50, 51, 52, 53, 54, 59, 60, 61, 62, 63, 64, 65, 66, 67, 76, 77, 78, 79, 80, 81, 82, 83, 84, 178, 179,
+                180, 181, 182, 183, 184, 185, 186, 250, 251, 252, 253, 254, 255, 256, 257, 258)
+    # Used for positive rotations determined by the moveIndex
+
+    unrotation = (113, 114, 115, 116, 117, 118, 119, 120, 121, 125, 126, 127, 128, 129, 130, 131, 132, 133, 140, 141, 142, 143, 144,
+                  145, 146, 147, 148, 188, 189, 190, 191, 192, 193, 194, 195, 196, 200, 201, 202, 203, 204, 205, 206, 207, 208, 224,
+                  225, 226, 227, 228, 229, 230, 231, 232)
+    # Used for negative rotations determined by the moveIndex
+
+    lis = []
 
     def __str__(self):
         return f"M.O.A.B. class bloon at {self.moveIndex}"
 
     def __init__(self, win: GraphWin, color="MOAB", moveIndex=0, rotationAngle=0):
         super().__init__(win, color, moveIndex)
-        self.health = 200
+        Bloon.lis.remove(self)
+        MOAB.lis.append(self)
+        self.health = 25
         self.rotationAngle = rotationAngle
 
     def drawBloon(self, win):
+        """Displays the image for the MOAB Bloon"""
         super().drawBloon(win)
-        # self.bloon.transform(1, self.rotationAngle)
+        self.bloon.transform(1, self.rotationAngle)
 
     def moveSelf(self, win):
-        super().moveSelf(win)
-        self.rotationAngle += 10
-        self.bloon.transform(angle=self.rotationAngle)
-
+        """Shifts the MOAB forward one space, as well as correcting the rotation"""
+        if super().moveSelf(win):
+            MOAB.lis.remove(self)
+            del self
+            return
+        if self.moveIndex in MOAB.rotation:
+            self.rotationAngle += 10
+        elif self.moveIndex in MOAB.unrotation:
+            self.rotationAngle -= 10
+        self.bloon.transform(1, self.rotationAngle)
         self.bloon.redraw()
 
-
     def popSelf(self, win):
-        self.health -= 100
+        """Removes health from the MOAB or when at 0 hp, pops the Bloon"""
+        self.health -= 1
         if self.health <= 0:
             super().popSelf(win)
+            del self
 
 
 def testGame():
@@ -168,6 +193,8 @@ def testGame():
     gameMap.draw(win)
     gameRunning = True
     m = MOAB(win)
+    m = None
+    n = None
     for c in ("red", "blue", "black", "green", "lead", "pink", "rainbow", "white", "yellow", "zebra"):
         b = Bloon(win, c)
         b.drawBloon(win)
@@ -176,15 +203,29 @@ def testGame():
                 i.moveSelf(win)
             time.sleep(.1)
             win.update()
-    while Bloon.lis:
+    for p in range(10):
         for i in Bloon.lis:
             i.moveSelf(win)
+            win.update()
+    while Bloon.lis or MOAB.lis:
+        for i in Bloon.lis:
+            i.moveSelf(win)
+        for i in MOAB.lis:
+            i.moveSelf(win)
+            if m is not None:
+                m.undraw()
+            if n is not None:
+                n.undraw()
+            m = Text(Point(1000, 200), str(i.rotationAngle))
+            n = Text(Point(1000, 150), str(i.moveIndex))
+            m.setSize(20)
+            n.setSize(20)
+            m.draw(win)
+            n.draw(win)
         check = win.checkMouse()
         if check is not None:
-            for i in Bloon.lis[:]:
-                i.popSelf(win)
-                Bloon.printBloonsAlive()
-        time.sleep(.1)
+            win.getMouse()
+        time.sleep(.001)
         win.update()
 
     win.getMouse()
@@ -192,5 +233,4 @@ def testGame():
 
 
 if __name__ == '__main__':
-    bloonList = []
     testGame()
